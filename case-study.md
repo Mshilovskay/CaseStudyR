@@ -287,7 +287,7 @@ all_trips_2021_v2 %>%
 ```
 <img src="Rplot002.png"
      alt="Average duration of Members and Casual riders vs. Day of the week"
-     style="float: left; margin-right: 10px;" height=600 />
+     style="float: left; margin-right: 10px;" height=550 />
 
 ```{r}
 #plot_3
@@ -301,7 +301,7 @@ all_trips_2021_v2 %>%
 ```
 <img src="Rplot003.png"
      alt="Average ride distance by Members and Casual riders vs. Day of the week"
-     style="float: left; margin-right: 10px;" height=500 />
+     style="float: left; margin-right: 10px;" height=550 />
 
 ```{r}
 #plot_4
@@ -316,7 +316,7 @@ all_trips_2021_v2 %>%
 ```
 <img src="Rplot004.png"
      alt="Total rides by Members and Casual riders by Month"
-     style="float: left; margin-right: 10px;" height=500 />
+     style="float: left; margin-right: 10px;" height=600 />
 
 ```{r}
 #plot_5
@@ -330,7 +330,7 @@ all_trips_2021_v2 %>%
 ```
 <img src="Rplot005.png"
      alt="Total rides of Members and Casual riders Vs. Day of the week"
-     style="float: left; margin-right: 10px;" height=500 />
+     style="float: left; margin-right: 10px;" height=550 />
 
 ```{r}
 #plot_6
@@ -343,7 +343,7 @@ all_trips_2021_v2 %>%
 ```
 <img src="Rplot006.png"
      alt="Average ride time of Members and Casual riders vs. Type of the bike"
-     style="float: left; margin-right: 10px;" height=500 />
+     style="float: left; margin-right: 10px;" height=550 />
 
 ```{r}
 #plot_7
@@ -358,7 +358,7 @@ all_trips_2021_v2 %>%
 ```
 <img src="Rplot007.png"
      alt="Total rides by the type of the bike"
-     style="float: left; margin-right: 10px;" height=500 />
+     style="float: left; margin-right: 10px;" height=600 />
 
 ## Step 6: Act
 Prepare the presentation with the top three recommendations based on the analysis.
