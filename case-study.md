@@ -1,3 +1,8 @@
+---
+## Mariia Shilovskaia -  Case study: Cyclistic
+
+---
+
 # Introduction
 
 This is a case study for my Google Data Analytics certificate course. In this case study I analyze a public data set about a bike-share company in Chicago. This document describes six steps of the data analysis process: ask, prepare, process, analyze, share, and act.
@@ -58,7 +63,7 @@ Deliverable: Documentation of any cleaning or manipulation of data.
 
 Install and load necessary packages in R
 
-```
+```{r}
 install.packages("tidyverse")
 install.packages("lubridate")
 install.packages("ggplot2")
@@ -79,7 +84,7 @@ setwd("/Users/...) # Sets your working directory to simplify calls to data
 ```
 #### Import data to R studio:
 
-```
+```{r}
 m01_2021 <- read_csv("Divvy_Trips_2021_01.csv")
 m02_2021 <- read_csv("Divvy_Trips_2021_02.csv")
 m03_2021 <- read_csv("Divvy_Trips_2021_03.csv")
@@ -97,7 +102,7 @@ m12_2021 <- read_csv("Divvy_Trips_2021_12.csv")
 #### Compare all column names of each of the files. 
 
 If column names is different, rename column name  to make them consistent:
-```
+```{r}
 colnames(m01_2021)
 colnames(m02_2021)
 colnames(m03_2021)
@@ -112,7 +117,7 @@ colnames(m11_2021)
 colnames(m12_2021)
 ```
 #### Check that all the data sets have the same number of columns, same type of columns and names:
-```
+```{r}
 str(m01_2021)
 str(m02_2021)
 str(m03_2021)
@@ -127,11 +132,11 @@ str(m11_2021)
 str(m12_2021)
 ```
 #### Merge all files in one and inspect for inconsistencies:
-```
+```{r}
 all_trips_2021 <- bind_rows(m01_2021,m02_2021,m03_2021,m04_2021,m05_2021,m06_2021,m07_2021,m08_2021,m09_2021,m10_2021,m11_2021,m12_2021)
 ```
 #### Statistical summary of data:
-```
+```{r}
 str(all_trips_2021) # List of columns and data types
 colnames(all_trips_2021) # List of column names
 dim(all_trips_2021) # Dimensions of the data frame
@@ -141,7 +146,7 @@ summary(all_trips_2021) # Statistical summary of data
 all_trips_2021 %>% distinct() # Remove duplicate rows in the data frame
 ```
 #### Add columns for date, month, year, day of the week into the data frame:
-```
+```{r}
 all_trips_2021$date <- as.Date(all_trips_2021$started_at)
 all_trips_2021$month <- format(as.Date(all_trips_2021$date), "%m")
 all_trips_2021$day <- format(as.Date(all_trips_2021$date), "%d")
@@ -153,7 +158,7 @@ colnames(all_trips_2021) # Check the names of all the columns in the data frame
 #### Add a new columns:  
 
 Add a "ride_length" calculation to the data frame:
-```
+```{r}
 all_trips_2021$ride_length <- difftime(all_trips_2021$ended_at,all_trips_2021$started_at)
 str(all_trips_2021) #Check the structure of the columns
 is.factor(all_trips_2021$ride_length) # Check if the object passed to the function is a Factor or not
@@ -163,12 +168,12 @@ is.numeric(all_trips_2021$ride_length) # Check if the values are regarded as num
 
 The data frame includes a few hundred entries when bikes were taken out of docks and checked for quality by Divvy. Otherwise a ride length is negative or "0":
 
-```
+```{r}
 all_trips_2021_v2 <- all_trips_2021[!(all_trips_2021$ride_length <= 0),]
 ```
 
 Add ride_distance calculation in km to the data frame:
-```
+```{r}
 all_trips_2021_v2$ride_distance <- distGeo(matrix(c(all_trips_2021_v2$start_lng, all_trips_2021_v2$start_lat), ncol=2), matrix (c(all_trips_2021_v2$end_lng, all_trips_2021_v2$end_lat), ncol=2))
 all_trips_2021_v2$ride_distance <- all_trips_2021_v2$ride_distance/1000 # Set ride_distance in km
 ```
@@ -191,7 +196,7 @@ Deliverable: A summary of data analysis.
 
 #### Descriptive analysis on column 'ride_length':
 
-```
+```{r}
 mean(all_trips_2021_v2$ride_length) # The straight average (total ride length / rides)
 median(all_trips_2021_v2$ride_length) # The midpoint number in the ascending array of ride lengths
 max(all_trips_2021_v2$ride_length) # The longest ride
@@ -199,7 +204,7 @@ min(all_trips_2021_v2$ride_length) # The shortest ride
 ```
 
 #### Compare members and casual users:
-```
+```{r}
 aggregate(all_trips_2021_v2$ride_length ~ all_trips_2021_v2$member_casual, FUN = mean)
 aggregate(all_trips_2021_v2$ride_length ~ all_trips_2021_v2$member_casual, FUN = median)
 aggregate(all_trips_2021_v2$ride_length ~ all_trips_2021_v2$member_casual, FUN = max)
@@ -212,7 +217,7 @@ aggregate(all_trips_2021_v2$ride_length ~ all_trips_2021_v2$member_casual + all_
 ```
 
 #### Analyze ridership data by type and weekday:
-```
+```{r}
 all_trips_2021_v2 %>% 
     mutate(weekday = wday(started_at, label = TRUE)) %>% # Creates weekday field using wday()
     group_by(member_casual, weekday) %>% # G roups by usertype and weekday
@@ -250,7 +255,7 @@ Deliverable: Supporting visualizations and key findings.
 * A ride distance increases on weekends for both groups.
 
 ### Visualizing the number of rides by rider type:
-```
+```{r}
 #plot_1
 all_trips_2021_v2 %>% 
     mutate(weekday = wday(started_at, label = TRUE)) %>% 
@@ -260,10 +265,15 @@ all_trips_2021_v2 %>%
     arrange(member_casual, weekday)  %>% 
     ggplot(aes(x = weekday, y = number_of_rides, fill = member_casual)) +
     geom_col(position = "dodge")+
-    labs(title="Total rides by Members and Casual riders vs. Day of the week ")
+    labs(title="Total rides by Members and Casual riders vs. Day of the week")
 ```
 
-```
+<img src="Rplot001.png"
+     alt="Total rides by Members and Casual riders vs. Day of the week"
+     style="float: left; margin-right: 10px;" height=500 />
+
+
+```{r}
 #plot_2
 all_trips_2021_v2 %>% 
     mutate(weekday = wday(started_at, label = TRUE)) %>% 
@@ -275,8 +285,11 @@ all_trips_2021_v2 %>%
     geom_col(position = "dodge")+
     labs(title="Average duration of Members and Casual riders vs. Day of the week")
 ```
+<img src="Rplot002.png"
+     alt="Average duration of Members and Casual riders vs. Day of the week"
+     style="float: left; margin-right: 10px;" height=600 />
 
-```
+```{r}
 #plot_3
 all_trips_2021_v2 %>% 
     mutate(weekday = wday(started_at, label = TRUE)) %>% 
@@ -284,10 +297,13 @@ all_trips_2021_v2 %>%
     summarise(average_ride_distance = mean(ride_distance)) %>% 
     ggplot(aes(x = weekday, y = average_ride_distance, fill = member_casual)) +
     geom_col(position = "dodge")+
-    labs(title="Average ride distance by Members and Casual riders vs. Day of the week ")
+    labs(title="Average ride distance by Members and Casual riders vs. Day of the week")
 ```
+<img src="Rplot003.png"
+     alt="Average ride distance by Members and Casual riders vs. Day of the week"
+     style="float: left; margin-right: 10px;" height=500 />
 
-```
+```{r}
 #plot_4
 all_trips_2021_v2 %>%  
   group_by(member_casual, month) %>% 
@@ -298,8 +314,11 @@ all_trips_2021_v2 %>%
   geom_col(width=0.5, position = position_dodge(width=0.5)) +
   scale_y_continuous(labels = function(x) format(x, scientific = FALSE))
 ```
+<img src="Rplot004.png"
+     alt="Total rides by Members and Casual riders by Month"
+     style="float: left; margin-right: 10px;" height=500 />
 
-```
+```{r}
 #plot_5
 all_trips_2021_v2 %>%   
     group_by(member_casual, day_of_week) %>% 
@@ -309,8 +328,11 @@ all_trips_2021_v2 %>%
     labs(title ="Total rides of Members and Casual riders Vs. Day of the week") +
     geom_col(width=1, position = position_dodge(width=1))
 ```
+<img src="Rplot005.png"
+     alt="Total rides of Members and Casual riders Vs. Day of the week"
+     style="float: left; margin-right: 10px;" height=500 />
 
-```
+```{r}
 #plot_6
 all_trips_2021_v2 %>%  
   group_by(member_casual, rideable_type) %>% 
@@ -319,8 +341,11 @@ all_trips_2021_v2 %>%
   geom_col(width=1, position = position_dodge(width=1)) + 
   labs(title ="Average ride time of Members and Casual riders vs. Type of the bike")
 ```
+<img src="Rplot006.png"
+     alt="Average ride time of Members and Casual riders vs. Type of the bike"
+     style="float: left; margin-right: 10px;" height=500 />
 
-```
+```{r}
 #plot_7
 all_trips_2021_v2 %>% 
     group_by(member_casual, rideable_type) %>% 
@@ -331,6 +356,9 @@ all_trips_2021_v2 %>%
     geom_col(position = "dodge")+
     labs(title="Total rides by the type of the bike")
 ```
+<img src="Rplot007.png"
+     alt="Total rides by the type of the bike"
+     style="float: left; margin-right: 10px;" height=500 />
 
 ## Step 6: Act
 Prepare the presentation with the top three recommendations based on the analysis.
