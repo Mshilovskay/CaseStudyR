@@ -9,7 +9,7 @@ This is a case study for my Google Data Analytics certificate course. In this ca
 
 ## Scenario
 
-A junior data analyst working in the marketing analyst team at Cyclistic, a bike-share company in Chicago. The director of marketing believes the company’s future success depends on maximizing the number of annual memberships. Therefore, a team wants to understand how casual riders and annual members use Cyclistic bikes differently. From these insights, the team will design a new marketing strategy to convert casual riders into annual members. But first, Cyclistic executives must approve recommendations, so they must be backed up with compelling data insights and professional data visualizations.
+A junior data analyst working in a marketing analyst team at Cyclistic, a bike-share company in Chicago. The director of marketing believes the company’s future success depends on maximizing the number of annual memberships. Therefore, the team wants to understand how casual riders and annual members use Cyclistic bikes differently. From these insights, the team will design a new marketing strategy to convert casual riders into annual members. But first, Cyclistic executives must approve recommendations, so they must be backed up with compelling data insights and professional data visualizations.
 
 ## Step 1: Ask
 
@@ -23,9 +23,8 @@ The director of marketing and your manager has assigned the first question to an
 
 ### Key tasks
 
-Identify the business task. Analyze the 12 months of Cyclistic customer data, find the difference between annual members and casual riders and compose marketing program for converting casual riders to annual members.
-
-Consider key stakeholders. Director of Marketing, marketing analytics team, executive team.
+* Identify the business task. Analyze the 12 months of Cyclistic customer data, find the difference between annual members and casual riders and compose marketing program for converting casual riders to annual members.
+* Consider key stakeholders. Director of Marketing, marketing analytics team, executive team.
 
 Deliverable: A list of differences between the casual riders and annual members.
 
@@ -35,13 +34,10 @@ Cyclistic’s historical trip data for 2021 was used to analyze and identify tre
 
 ### Key tasks
 
-Download data and store it appropriately. The Data has been downloaded and have been stored on my computer. The data is located in public dataset divvy-tripdata [link](https://divvy-tripdata.s3.amazonaws.com/index.html).
-
-Identify how it’s organized. The data stored in CSV files, and there are a total of 13 columns in each files. The data is provided by a third-party called Motivate International Inc.
-
-Sort and filter the data. 12 months of data from 2021 was used for this analysis. The data has a large sample size, more than million rows in total.
-
-Determine the credibility of the data. Data-privacy issues prohibit me from using riders’ personally identifiable information and I can't determine if riders have purchased multiple single passes.
+* Download data and store it appropriately. The Data has been downloaded and have been stored on my computer. The data is located in public dataset divvy-tripdata [link](https://divvy-tripdata.s3.amazonaws.com/index.html).
+* Identify how it’s organized. The data stored in CSV files, and there are a total of 13 columns in each files. The data is provided by a third-party called Motivate International Inc.
+* Sort and filter the data. 12 months of data from 2021 was used for this analysis. The data has a large sample size, more than million rows in total.
+* Determine the credibility of the data. Data-privacy issues prohibit me from using riders’ personally identifiable information and I can't determine if riders have purchased multiple single passes.
 
 Deliverable: A description of all data sources used.
 
@@ -49,19 +45,16 @@ Deliverable: A description of all data sources used.
 
 ### Key tasks
 
-Check the data for errors. Сheck for duplicates, inconsistencies. 
-
-Choose your tools. Use the R programming language because the data set has more than a million rows in total.
-
-Transform the data to work with it effectively. Merge all 12 csv files into one. 
-
-Document the cleaning process. Create a document for all steps of the process.
+* Check the data for errors. Сheck for duplicates, inconsistencies. 
+* Choose your tools. Use the R programming language because the data set has more than a million rows in total.
+* Transform the data to work with it effectively. Merge all 12 csv files into one. 
+* Document the cleaning process. Create a document for all steps of the process.
 
 Deliverable: Documentation of any cleaning or manipulation of data.
 
-### Install and load necessary packages in R
+### Prepare the data
 
-Install and load necessary packages in R
+#### Install and load necessary packages in R
 
 ```{r}
 install.packages("tidyverse")
@@ -99,10 +92,10 @@ m11_2021 <- read_csv("Divvy_Trips_2021_11.csv")
 m12_2021 <- read_csv("Divvy_Trips_2021_12.csv")
 ```
 
-#### Compare all column names of each of the files. 
+#### Compare all column names of each of the files:
 
-If column names is different, rename column name  to make them consistent:
 ```{r}
+# If column names is different, rename column names to make them consistent:
 colnames(m01_2021)
 colnames(m02_2021)
 colnames(m03_2021)
@@ -116,7 +109,9 @@ colnames(m10_2021)
 colnames(m11_2021)
 colnames(m12_2021)
 ```
+
 #### Check that all the data sets have the same number of columns, same type of columns and names:
+
 ```{r}
 str(m01_2021)
 str(m02_2021)
@@ -131,11 +126,15 @@ str(m10_2021)
 str(m11_2021)
 str(m12_2021)
 ```
+
 #### Merge all files in one and inspect for inconsistencies:
+
 ```{r}
 all_trips_2021 <- bind_rows(m01_2021,m02_2021,m03_2021,m04_2021,m05_2021,m06_2021,m07_2021,m08_2021,m09_2021,m10_2021,m11_2021,m12_2021)
 ```
+
 #### Statistical summary of data:
+
 ```{r}
 str(all_trips_2021) # List of columns and data types
 colnames(all_trips_2021) # List of column names
@@ -145,7 +144,11 @@ tail(all_trips_2021) # The last 6 rows of the data frame
 summary(all_trips_2021) # Statistical summary of data
 all_trips_2021 %>% distinct() # Remove duplicate rows in the data frame
 ```
-#### Add columns for date, month, year, day of the week into the data frame:
+
+#### Add a new columns
+
+Add columns for date, month, year, day of the week into the data frame:
+
 ```{r}
 all_trips_2021$date <- as.Date(all_trips_2021$started_at)
 all_trips_2021$month <- format(as.Date(all_trips_2021$date), "%m")
@@ -155,7 +158,6 @@ all_trips_2021$day_of_week <- format(as.Date(all_trips_2021$date), "%A")
 
 colnames(all_trips_2021) # Check the names of all the columns in the data frame
 ```
-#### Add a new columns:  
 
 Add a "ride_length" calculation to the data frame:
 ```{r}
@@ -182,17 +184,14 @@ all_trips_2021_v2$ride_distance <- all_trips_2021_v2$ride_distance/1000 # Set ri
 
 ### Key tasks
 
-Aggregate the data so it’s useful and accessible.
-
-Organize and format the data.
-
-Perform calculations.
-
-Identify trends and relationships.
+* Aggregate the data so it’s useful and accessible.
+* Organize and format the data.
+* Perform calculations.
+* Identify trends and relationships.
 
 Deliverable: A summary of data analysis.
 
-### Conduct descriptive analysis:
+### Conduct descriptive analysis
 
 #### Descriptive analysis on column 'ride_length':
 
@@ -204,6 +203,7 @@ min(all_trips_2021_v2$ride_length) # The shortest ride
 ```
 
 #### Compare members and casual users:
+
 ```{r}
 aggregate(all_trips_2021_v2$ride_length ~ all_trips_2021_v2$member_casual, FUN = mean)
 aggregate(all_trips_2021_v2$ride_length ~ all_trips_2021_v2$member_casual, FUN = median)
@@ -236,17 +236,14 @@ all_trips_2021_v2 %>%
 
 ### Key tasks
 
-Determine the best way to share your findings. Share findings in the presentation. 
-
-Create effective data visualizations. Compose plots in R Studio. 
-
-Present findings. Prepared the presentation with all findings.
-
-Ensure the result is accessible. Check visualization for accessibility. 
+* Determine the best way to share your findings. Share findings in the presentation. 
+* Create effective data visualizations. Compose plots in R Studio. 
+* Present findings. Prepared the presentation with all findings.
+* Ensure the result is accessible. Check visualization for accessibility. 
 
 Deliverable: Supporting visualizations and key findings.
 
-### Key findings summary:
+### Key findings summary
 
 * Members of Cyclistic use bikes more on weekdays.
 * Casual riders are more active on the weekends.
@@ -254,7 +251,8 @@ Deliverable: Supporting visualizations and key findings.
 * June to September is the most popular season to rent a bike.
 * A ride distance increases on weekends for both groups.
 
-### Visualizing the number of rides by rider type:
+### Visualize the number of rides by rider type:
+
 ```{r}
 #plot_1
 all_trips_2021_v2 %>% 
@@ -287,7 +285,7 @@ all_trips_2021_v2 %>%
 ```
 <img src="Rplot002.png"
      alt="Average duration of Members and Casual riders vs. Day of the week"
-     style="float: left; margin-right: 10px;" height=550 />
+     style="float: left; margin-right: 10px;" height=600 />
 
 ```{r}
 #plot_3
@@ -316,7 +314,7 @@ all_trips_2021_v2 %>%
 ```
 <img src="Rplot004.png"
      alt="Total rides by Members and Casual riders by Month"
-     style="float: left; margin-right: 10px;" height=600 />
+     style="float: left; margin-right: 10px;" height=700 />
 
 ```{r}
 #plot_5
@@ -330,7 +328,7 @@ all_trips_2021_v2 %>%
 ```
 <img src="Rplot005.png"
      alt="Total rides of Members and Casual riders Vs. Day of the week"
-     style="float: left; margin-right: 10px;" height=550 />
+     style="float: left; margin-right: 10px;" height=700 />
 
 ```{r}
 #plot_6
@@ -343,7 +341,7 @@ all_trips_2021_v2 %>%
 ```
 <img src="Rplot006.png"
      alt="Average ride time of Members and Casual riders vs. Type of the bike"
-     style="float: left; margin-right: 10px;" height=550 />
+     style="float: left; margin-right: 10px;" height=650 />
 
 ```{r}
 #plot_7
@@ -358,22 +356,18 @@ all_trips_2021_v2 %>%
 ```
 <img src="Rplot007.png"
      alt="Total rides by the type of the bike"
-     style="float: left; margin-right: 10px;" height=600 />
+     style="float: left; margin-right: 10px;" height=720 />
 
 ## Step 6: Act
-Prepare the presentation with the top three recommendations based on the analysis.
 
 ### Key tasks
 
-Solve the problem.
+* Prepare and conduct a presentation with analysis results.
+* Provide recommendations to the stakeholders.
 
-Apply insights.
+Deliverable: The recommendations based on the analysis.
 
-Make a data-driven decision.
-
-Deliverable: The top three recommendations based on your analysis.
-
-### Recommendations:
+### Recommendations
 
 * Add seasonal rates with privileges for member riders.
 * Provide discounts on weekends with membership.
